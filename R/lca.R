@@ -234,22 +234,22 @@ lca <-  function(data,series=names(data$rate)[1],years=data$year, ages=data$age,
             # Omit breakpoints less than minperiod from end
             bp <- bp[bp <= (m-minperiod)]
             bestbreak <- max(bp)
-            return(lca(data,series,year[(bestbreak+1):m],ages=ages,max.age=max.age,
-                adjust=adjust,interpolate=interpolate,chooseperiod=FALSE,scale=scale))
+            return(lca(data,series,year[(bestbreak+1):m],ages=ages,max.age=max.age,adjust=adjust,chooseperiod=FALSE,
+                restype=restype,interpolate=interpolate,scale=scale))
         }
         else
         {
             RS <- devlin <- devadd <- numeric(m-2)
             for(i in 1:(m-2))
             {
-                tmp <- lca(data,series,year[i:m],ages=ages,max.age=max.age,adjust=adjust,chooseperiod=FALSE,interpolate=interpolate,scale=scale)
+                tmp <- lca(data,series,year[i:m],ages=ages,max.age=max.age,adjust=adjust,chooseperiod=FALSE,restype=restype,interpolate=interpolate,scale=scale)
                 devlin[i] <- tmp$mdev[2]
                 devadd[i] <- tmp$mdev[1]
                 RS[i] <- (tmp$mdev[2]/tmp$mdev[1])
             }
             bestbreak <- order(RS[1:(m-minperiod)])[1]-1
-            out <- lca(data,series,year[(bestbreak+1):m],ages=ages,max.age=max.age,
-                adjust=adjust,chooseperiod=FALSE,interpolate=interpolate,scale=scale)
+            out <- lca(data,series,year[(bestbreak+1):m],ages=ages,max.age=max.age,adjust=adjust,chooseperiod=FALSE,
+                restype=restype,interpolate=interpolate,scale=scale)
             out$mdevs <- ts(cbind(devlin,devadd,RS),start=startyear,deltat=deltat)
             dimnames(out$mdevs)[[2]] <- c("Mean deviance total","Mean deviance base","Mean deviance ratio")
             return(out)
